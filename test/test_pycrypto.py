@@ -61,3 +61,10 @@ def test_vanity():
   _assert_throws(Exception, pycrypto.vanity, "Invalid.", 1)
   _assert_throws(ValueError, pycrypto.vanity, "AB.", 1000)
 
+# pytest is picking up the wrong module
+if __name__ == "__main__":
+  test_hash()
+  test_pubkey()
+  test_prvkey()
+  test_dsa()
+  test_vanity()
