@@ -79,7 +79,7 @@ pub fn verify(msg_filename: String, pubkey_hex: String, sig_hex: String) -> Cryp
 
   let sig = hex::decode(&sig_hex)?;
 
-  Ok(pubkey.verify(&hash, &sig)?)
+  pubkey.verify(&hash, &sig)
 }
 
 

@@ -55,7 +55,7 @@ fn pycrypto(_: Python, m: &PyModule) -> PyResult<()> {
   #[pyfn(m, "vanity")]
   fn vanity_py(s: String, nth: usize) -> PyResult<HashMap<String, String>> {
     // Use u8 to ensure threads <= 256, defaulting to 1
-    if nth < 1 || nth > 256 {
+    if !(1..=256).contains(&nth) {
       return Err(PyValueError::new_err(format!("invalid number of threads requested {} (must be 1-256)", nth)));
     }
 
