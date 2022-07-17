@@ -20,7 +20,7 @@ fn wrap_result<T>(res: CryptoResult<T>) -> PyResult<T> {
 }
 
 #[pymodule]
-fn pycrypto(_: Python, m: &PyModule) -> PyResult<()> {
+fn crypto(_: Python, m: &PyModule) -> PyResult<()> {
 
   #[pyfn(m, "hash160")]
   fn hash160_py(filename: String) -> PyResult<String> {

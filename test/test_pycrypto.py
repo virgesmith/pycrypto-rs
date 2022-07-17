@@ -1,5 +1,5 @@
 from pathlib import Path
-import pycrypto
+import crypto
 
 def _test_path(filename):
   return str(Path("../crypto-rs/test-data/") / filename)
@@ -14,13 +14,13 @@ def _assert_throws(e, f, *args, **kwargs):
 
 
 def test_hash():
-  assert pycrypto.hash256(_test_path("ec-priv.pem")) == "ae77017a14b0cfe03c375024618179b45a056f66e56c8f2020be3f21e2ef2737"
-  assert pycrypto.hash160(_test_path("ec-priv.pem")) == "d809411dc3e0db7e12390a80c6dead25052b6069"
+  assert crypto.hash256(_test_path("ec-priv.pem")) == "ae77017a14b0cfe03c375024618179b45a056f66e56c8f2020be3f21e2ef2737"
+  assert crypto.hash160(_test_path("ec-priv.pem")) == "d809411dc3e0db7e12390a80c6dead25052b6069"
 
-  _assert_throws(Exception, pycrypto.hash256, "nothere.txt")
+  _assert_throws(Exception, crypto.hash256, "nothere.txt")
 
 def test_pubkey():
-  result = pycrypto.pubkey(_test_path("ec-priv.pem"))
+  result = crypto.pubkey(_test_path("ec-priv.pem"))
 
   assert result['uncompressed hex'] == '04f6755afd57b6da43e8eec8144b5efe63f902ccc1980461fc66435671f54bea02147c8f924a1e7cbe66e6cdf06532136351d886468094a93f89e994fa8ebbd080'
   assert result['uncompressed base64'] == 'BPZ1Wv1XttpD6O7IFEte/mP5AszBmARh/GZDVnH1S+oCFHyPkkoefL5m5s3wZTITY1HYhkaAlKk/iemU+o670IA='
@@ -31,35 +31,35 @@ def test_pubkey():
   assert result['compressed hex'] == '02f6755afd57b6da43e8eec8144b5efe63f902ccc1980461fc66435671f54bea02'
 
   # TODO fix
-  _assert_throws(Exception, pycrypto.pubkey, _test_path("ec-pub.pem"))
-  _assert_throws(Exception, pycrypto.pubkey, _test_path("notfound.pem"))
+  _assert_throws(Exception, crypto.pubkey, _test_path("ec-pub.pem"))
+  _assert_throws(Exception, crypto.pubkey, _test_path("notfound.pem"))
 
 def test_prvkey():
-  result: dict = pycrypto.prvkey(_test_path("ec-priv.pem"))
+  result: dict = crypto.prvkey(_test_path("ec-priv.pem"))
 
   assert result['hex'] == '94199c35c8848e03e9cb4380ef712bc077a5991fa0bbf2c4a40b0353e3ad6c27'
   assert result['BTC wif'] == 'L2Bbdwmcs188qfBWjhGi95P6sxVeGbvS1zQsnvpcAc4h1864jJXD'
   assert result['base64'] == 'lBmcNciEjgPpy0OA73ErwHelmR+gu/LEpAsDU+OtbCc='
   assert result['raw'] == '[148, 25, 156, 53, 200, 132, 142, 3, 233, 203, 67, 128, 239, 113, 43, 192, 119, 165, 153, 31, 160, 187, 242, 196, 164, 11, 3, 83, 227, 173, 108, 39]'
 
-  _assert_throws(Exception, pycrypto.prvkey, _test_path("ec-pub.pem"))
-  _assert_throws(Exception, pycrypto.prvkey, _test_path("notfound.pem"))
+  _assert_throws(Exception, crypto.prvkey, _test_path("ec-pub.pem"))
+  _assert_throws(Exception, crypto.prvkey, _test_path("notfound.pem"))
 
 def test_dsa():
-  pubkey = pycrypto.pubkey(_test_path("ec-priv.pem"))["compressed hex"]
-  sig = pycrypto.sign(_test_path("ec-priv.pem"), _test_path("ec-priv.pem"))
-  assert pycrypto.verify(_test_path("ec-priv.pem"), pubkey, sig["signature"])
-  assert not pycrypto.verify(_test_path("ec-pub.pem"), pubkey, sig["signature"])
+  pubkey = crypto.pubkey(_test_path("ec-priv.pem"))["compressed hex"]
+  sig = crypto.sign(_test_path("ec-priv.pem"), _test_path("ec-priv.pem"))
+  assert crypto.verify(_test_path("ec-priv.pem"), pubkey, sig["signature"])
+  assert not crypto.verify(_test_path("ec-pub.pem"), pubkey, sig["signature"])
 
 def test_vanity():
-  result = pycrypto.vanity("AB", 4)
+  result = crypto.vanity("AB", 4)
   assert "wif" in result
   assert "tries" in result
   assert "hex" in result
   assert result['p2pkh'][:3] == "1AB"
 
-  _assert_throws(Exception, pycrypto.vanity, "Invalid.", 1)
-  _assert_throws(ValueError, pycrypto.vanity, "AB.", 1000)
+  _assert_throws(Exception, crypto.vanity, "Invalid.", 1)
+  _assert_throws(ValueError, crypto.vanity, "AB.", 1000)
 
 # pytest is picking up the wrong module
 if __name__ == "__main__":

@@ -10,19 +10,19 @@ Firstly, you need a working rust installation, and the [crypto-rs](https://githu
 
 Then install the python dependencies (virtualenv recommended):
 
-```bash
-pip install -r requirements.txt
+```sh
+pip install maturin
 ```
 
 Build locally:
 
-```bash
+```sh
 maturin develop
 ```
 
 Test:
 
-```bash
+```sh
 pytest.py
 ```
 
